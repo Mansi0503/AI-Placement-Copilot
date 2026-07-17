@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+placement_copilot.db
+.streamlit/secrets.toml
+.DS_Store

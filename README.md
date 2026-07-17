@@ -1,342 +1,128 @@
-<div align="center">
+# 🎯 AI Placement Copilot
 
-# 🚀 AI Placement Copilot
+A personal AI mentor for campus placements — built with **Streamlit**, **Gemini API**, **Python**, and **SQLite**.
 
-### *An AI-Powered Career Preparation Platform for Students & Job Seekers*
+## ✨ Features
 
-Transform your placement journey with **AI-driven resume analysis, ATS optimization, interview preparation, and personalized career guidance**—all in one intelligent web application.
+- 📄 **Upload Resume** — parses PDF / DOCX / TXT
+- 🎯 **ATS Score** — keyword-match score + Gemini recruiter-style feedback
+- 🏢 **Company-wise Resume Suggestions** — tailored tips per target company
+- 🗣️ **HR Interview Practice** — a live back-and-forth mock HR round
+- 💻 **Technical Interview Questions** — by topic and difficulty, with model answers
+- 🧮 **Aptitude Question Generator** — MCQs with answers and explanations
+- 📊 **Skill Gap Analysis** — matched vs. missing skills for a target role
+- 📅 **30-Day Learning Plan** — personalized, day-by-day
+- ✉️ **Cover Letter Generator** — tailored to company + role
+- 🔎 **Company Insights (bonus)** — e.g. *"I'm applying to TCS Digital"* →
+  required skills, interview pattern, expected salary, FAQs (curated data
+  for common recruiters + live Gemini lookup for anything else)
 
-![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/Google-Gemini_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+All ATS scores and AI-generated content (cover letters, plans, Q&A) are
+logged to a local **SQLite** database (`placement_copilot.db`) so you can
+build a history view later if you want.
 
-⭐ If you like this project, consider giving it a star!
+The app works even **without** a Gemini API key — the ATS score falls back
+to a transparent keyword-overlap calculation, and every AI page shows a
+clear message asking you to add a key instead of crashing.
 
-</div>
-
----
-
-# 📖 Overview
-
-Preparing for placements often requires using multiple platforms for resume reviews, ATS checks, interview preparation, and career planning.
-
-**AI Placement Copilot** brings all these essential tools together into a single AI-powered platform.
-
-Built using **Python**, **Streamlit**, **Google Gemini AI**, and **SQLite**, this application helps students improve their resumes, practice interviews, identify skill gaps, and receive personalized learning recommendations.
-
-Whether you're applying for internships, campus placements, or full-time software roles, AI Placement Copilot acts as your personal AI career assistant.
-
----
-
-# 🎯 Problem Statement
-
-Many students struggle with:
-
-- Low ATS resume scores
-- Generic resumes
-- Lack of interview preparation
-- Difficulty identifying skill gaps
-- No personalized career guidance
-
-This project solves these challenges using Generative AI.
-
----
-
-# 💡 Key Features
-
-## 📄 AI Resume Analyzer
-
-✔ Upload resumes in PDF or DOCX format
-
-✔ Automatically extract resume details
-
-✔ AI-generated resume review
-
-✔ Actionable improvement suggestions
-
----
-
-## 🎯 ATS Resume Score
-
-Evaluate resume compatibility with Applicant Tracking Systems.
-
-Features include:
-
-- ATS Score
-- Keyword Matching
-- Missing Skills Detection
-- Resume Optimization Suggestions
-- Recruiter-Friendly Formatting Tips
-
----
-
-## 🏢 Company-Specific Resume Optimization
-
-Generate tailored resume recommendations for companies such as:
-
-- Google
-- Microsoft
-- Amazon
-- Deloitte
-- Accenture
-- Infosys
-- TCS
-- Capgemini
-- Cognizant
-- Wipro
-
----
-
-## 🤖 AI Interview Preparation
-
-Practice with AI-generated interview questions.
-
-Includes:
-
-- HR Questions
-- Technical Questions
-- Behavioral Questions
-- Follow-up Questions
-- AI Feedback
-
----
-
-## 📊 Skill Gap Analysis
-
-Identify missing skills required for your target role.
-
-The application suggests:
-
-- Technical Skills
-- Soft Skills
-- Certifications
-- Courses
-- Learning Priorities
-
----
-
-## 📚 Personalized Learning Roadmap
-
-Generate customized study plans based on:
-
-- Current Skill Set
-- Career Goal
-- Experience Level
-- Missing Skills
-
----
-
-## 💾 Resume Database
-
-Store and manage resume analysis history using SQLite.
-
----
-
-# 🏗️ System Architecture
+## 🗂️ Project structure
 
 ```
-               Resume Upload
-                      │
-                      ▼
-            Resume Parsing Module
-                      │
-                      ▼
-             Google Gemini AI
-                      │
-      ┌───────────────┼────────────────┐
-      ▼               ▼                ▼
- ATS Analysis   Interview Module   Skill Analysis
-      │               │                │
-      └───────────────┼────────────────┘
-                      ▼
-          Personalized Recommendations
-                      │
-                      ▼
-            Streamlit User Interface
-                      │
-                      ▼
-                SQLite Database
-```
-
----
-
-# 🛠️ Technology Stack
-
-| Category | Technologies |
-|----------|--------------|
-| Programming Language | Python |
-| Frontend | Streamlit |
-| Artificial Intelligence | Google Gemini API |
-| Database | SQLite |
-| Resume Parsing | PyPDF2, python-docx |
-| Data Processing | Pandas, NumPy |
-| Environment Management | python-dotenv |
-| Version Control | Git & GitHub |
-
----
-
-# 📂 Project Structure
-
-```
-AI-Placement-Copilot/
-│
-├── app.py
+placement-copilot/
+├── app.py                     # Streamlit app (entry point)
+├── db.py                      # SQLite setup + helper functions
 ├── requirements.txt
-├── README.md
-├── .gitignore
-├── .env.example
-├── copilot_db.py
-│
+├── .env.example                # copy to .env and add your key
 ├── utils/
-│   ├── ats_scorer.py
-│   ├── company_data.py
-│   ├── gemini_client.py
-│   └── resume_parser.py
-│
-├── assets/
-│
-└── screenshots/
+│   ├── gemini_client.py       # Gemini API wrapper (graceful fallback)
+│   ├── resume_parser.py       # PDF/DOCX/TXT text + skill extraction
+│   ├── ats_scorer.py          # keyword-based + Gemini ATS scoring
+│   └── company_data.py        # curated company profiles + Gemini fallback
+└── README.md
 ```
 
----
-
-# 🚀 Getting Started
-
-## Clone Repository
+## 🚀 Run locally
 
 ```bash
-git clone https://github.com/YourUsername/AI-Placement-Copilot.git
-```
+git clone https://github.com/<your-username>/ai-placement-copilot.git
+cd ai-placement-copilot
 
-Move into the project directory.
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
 
-```bash
-cd AI-Placement-Copilot
-```
-
-Install dependencies.
-
-```bash
 pip install -r requirements.txt
+
+cp .env.example .env
+# then open .env and paste your Gemini API key
+
+streamlit run app.py
 ```
 
-Create a `.env` file.
+Get a free Gemini API key at **https://aistudio.google.com/app/apikey**.
 
-```env
-GEMINI_API_KEY=YOUR_API_KEY
-```
+### ⚠️ Important: don't run this with the "Run" button / `python app.py`
 
-Run the application.
+This is a **Streamlit** app, not a plain script. It must be started with:
 
 ```bash
 streamlit run app.py
 ```
 
----
+If you run it as `python app.py` (e.g. via VS Code's ▶️ Run button), it will
+either crash or silently do nothing, because Streamlit needs its own server
+process to render the UI in your browser.
 
-# 🖥️ Application Modules
+### Windows tips
 
-- Home Dashboard
-- Resume Upload
-- ATS Resume Analyzer
-- Resume Optimization
-- Company Resume Analysis
-- AI Interview Practice
-- Skill Gap Analysis
-- Learning Roadmap
-- Resume History
+- Always `cd` into the `placement-copilot` folder first, then run
+  `streamlit run app.py` from that same terminal/folder — don't run it via
+  a full path from a temp/extracted-zip location.
+- If `streamlit` isn't recognized, make sure your virtual environment is
+  activated (`venv\Scripts\activate`) and re-run `pip install -r requirements.txt`.
+- If you ever see an import error mentioning a file that isn't in this
+  project, you likely have a **globally installed package with the same
+  name** as one of this project's files, and Python is loading that instead.
+  Run `pip show <package-name>` to confirm, then either uninstall it
+  (`pip uninstall <package-name>`) or work inside a virtual environment
+  (recommended) so global packages can't collide with project files.
 
----
+## ☁️ Deploy on Streamlit Community Cloud (free)
 
-# 📸 Screenshots
+1. Push this project to a **public GitHub repo**.
+2. Go to **https://share.streamlit.io** and sign in with GitHub.
+3. Click **"New app"**, pick your repo/branch, and set the main file to `app.py`.
+4. Under **Advanced settings → Secrets**, add:
+   ```toml
+   GEMINI_API_KEY = "your_actual_key_here"
+   ```
+5. Click **Deploy**. You'll get a public URL like
+   `https://your-app-name.streamlit.app`.
 
-> Add screenshots after deployment.
+> Note: Streamlit Community Cloud's filesystem is ephemeral — the SQLite
+> file will reset on redeploys/restarts. For persistent history across
+> restarts, swap `db.py` to a hosted database (e.g. Turso, Supabase Postgres)
+> later; the function signatures are kept simple on purpose to make that
+> swap easy.
 
-| Dashboard | ATS Analysis |
-|-----------|--------------|
-| *(Screenshot)* | *(Screenshot)* |
+## 🔒 Notes on the .env file
 
-| Interview Practice | Learning Roadmap |
-|-------------------|------------------|
-| *(Screenshot)* | *(Screenshot)* |
+`.env` is already in `.gitignore` — **never commit your real API key**.
+Only `.env.example` (with a placeholder) should be pushed to GitHub.
 
----
+## 🛠️ Tech stack
 
-# 🎯 Use Cases
+| Layer      | Choice                          |
+|------------|----------------------------------|
+| UI         | Streamlit                        |
+| AI         | Google Gemini API (`google-generativeai`) |
+| Language   | Python 3.10+                     |
+| Storage    | SQLite                           |
+| Parsing    | pypdf, python-docx                |
 
-- Campus Placements
-- Internship Applications
-- Resume Building
-- Career Guidance
-- AI Interview Practice
-- Software Engineering Roles
-- Data Science & AI/ML Roles
+## 📌 Ideas to extend
 
----
-
-# 📈 Future Scope
-
-- LinkedIn Profile Analyzer
-- Resume Builder
-- Job Recommendation System
-- AI Career Mentor
-- Voice-Based Mock Interviews
-- Resume Version Comparison
-- Multi-language Support
-- Cloud Deployment
-
----
-
-# 🧠 Skills Demonstrated
-
-This project demonstrates practical knowledge of:
-
-- Python Development
-- Generative AI Integration
-- Prompt Engineering
-- Streamlit Web Application Development
-- Resume Parsing
-- ATS Resume Evaluation
-- SQLite Database Design
-- Modular Software Architecture
-- Git & GitHub Workflow
-- API Integration
-- User Interface Design
-
----
-
-# 📊 Project Highlights
-
-- AI-powered career preparation platform
-- Intelligent ATS resume scoring
-- Google Gemini AI integration
-- Personalized interview preparation
-- Company-specific resume optimization
-- Dynamic learning roadmap generation
-- Interactive Streamlit interface
-- Clean modular architecture
-- Lightweight SQLite database
-- Resume-ready portfolio project
-
----
-
-# 👩‍💻 Author
-
-## Mansi Verma
-
-**B.Tech – Computer Science Engineering (Artificial Intelligence & Machine Learning)**
-
-VIT Bhopal University
-
-📧 Email: mv699205@gmail.com
-
----
-
-<div align="center">
-
-### ⭐ If this project helped you, please consider giving it a Star!
-
-**Made with ❤️ using Python, Streamlit & Google Gemini AI**
-
-</div>
+- Add login so `student_name` maps to a real account and history page.
+- Add a "history" page reading from `db.get_history()` / `db.get_ats_history()`.
+- Swap the keyword-based skill extraction in `resume_parser.py` for an
+  embeddings-based similarity search for more accurate ATS scoring.
+- Add PDF export for the cover letter and learning plan.
