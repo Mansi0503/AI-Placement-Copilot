@@ -5,32 +5,33 @@ from google import genai
 
 load_dotenv()
 
-DEFAULT_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
+DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 
 def _get_api_key():
-    key = None
+    # First try Streamlit Secrets
     try:
-        key = st.secrets.get("GEMINI_API_KEY")
+        if "GEMINI_API_KEY" in st.secrets:
+            return st.secrets["GEMINI_API_KEY"]
     except Exception:
         pass
 
-    if not key:
-        key = os.getenv("GEMINI_API_KEY")
-
-    return key
+    # Then try local .env
+    return os.getenv("GEMINI_API_KEY")
 
 
 def is_configured():
-    return bool(_get_api_key())
+    return _get_api_key() is not None
 
 
 def generate(prompt: str, system_instruction: str = None, temperature: float = 0.7):
-    if not is_configured():
-        return "⚠️ Gemini API key not configured."
+    api_key = _get_api_key()
+
+    if not api_key:
+        return "⚠️ GEMINI_API_KEY not found."
 
     try:
-        client = genai.Client(api_key=_get_api_key())
+        client = genai.Client(api_key=api_key)
 
         if system_instruction:
             prompt = f"{system_instruction}\n\n{prompt}"
@@ -43,4 +44,6 @@ def generate(prompt: str, system_instruction: str = None, temperature: float = 0
         return response.text
 
     except Exception as e:
-        return f"⚠️ Gemini request failed: {e}"
+        return f"⚠️ Gemini Error: {str(e)}"
+
+
